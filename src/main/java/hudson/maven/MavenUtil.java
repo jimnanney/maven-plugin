@@ -145,12 +145,6 @@ public class MavenUtil {
         
         MavenRequest mavenRequest = new MavenRequest();
         
-        // make sure ~/.m2 exists to avoid http://www.nabble.com/BUG-Report-tf3401736.html
-        File m2Home = new File(MavenEmbedder.userHome, ".m2");
-        m2Home.mkdirs();
-        if(!m2Home.exists())
-            throw new AbortException("Failed to create "+m2Home);
-
         if (mer.getPrivateRepository()!=null)
             mavenRequest.setLocalRepositoryPath( mer.getPrivateRepository() );
 
@@ -162,6 +156,11 @@ public class MavenUtil {
         if ( mer.getAlternateSettings() != null ) {
             mavenRequest.setUserSettingsFile( mer.getAlternateSettings().getAbsolutePath() );
         } else {
+            // make sure ~/.m2 exists to avoid http://www.nabble.com/BUG-Report-tf3401736.html
+            File m2Home = new File(MavenEmbedder.userHome, ".m2");
+            m2Home.mkdirs();
+            if(!m2Home.exists())
+                throw new AbortException("Failed to create "+m2Home);
             mavenRequest.setUserSettingsFile( new File( m2Home, "settings.xml" ).getAbsolutePath() );
         }
 
